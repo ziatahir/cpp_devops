@@ -11,7 +11,7 @@ int main () {
    cout << "</head>\n";
    cout << "<body>\n";
    cout << "<h2>Hello World</h2>\n";
-   cout << "<h2>C++ on apache using CGI</h2>\n";
+   cout << "<h2>C++ on apache using CGI from Jenkins</h2>\n";
    cout << "</body>\n";
    cout << "</html>\n";
    return 0;  
