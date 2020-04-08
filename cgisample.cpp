@@ -2,8 +2,6 @@
 using namespace std;
 
 int main () {
-	int a =2;
-	int b ;
    cout << "Content-type:text/html\r\n\r\n";
    cout << "<html>\n";
    cout << "<head>\n";
@@ -15,9 +13,4 @@ int main () {
    cout << "</body>\n";
    cout << "</html>\n";
    return 0;  
-   return 0;
-
-
-
-
 }
