@@ -21,5 +21,5 @@ BOOST_AUTO_TEST_CASE(addition) {
 }
 
 BOOST_AUTO_TEST_CASE(size) {
- BOOST_CHECK(checksize("hello") == 5);
+ BOOST_CHECK(checksize("hello1") == 5);
 }
