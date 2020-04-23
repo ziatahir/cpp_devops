@@ -4,3 +4,8 @@
 BOOST_AUTO_TEST_CASE(sample_test_case) {
     BOOST_TEST(1 + 1 == 2);
 }
+
+BOOST_AUTO_TEST_CASE(sample_test_case2) {
+    BOOST_TEST(1 + 1 == 3);
+}
+
