@@ -1,0 +1,81 @@
+pipeline {
+  
+    agent {label "master"}
+    
+    stages {
+    
+        stage ('Checkout') {
+		   steps{
+			  cleanWs()
+              checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/ziatahir/cpp_devops.git']]])
+              }
+		   }
+            
+        
+        stage('Static code Analysis') {
+           steps {
+		      echo "static code analysis using cppcheck tool"
+              //generate SCAReport.xml file containg report
+              sh '''
+                 cppcheck --enable=all --inconclusive --xml-version=2 -v  --output-file=SCAReport.xml cgisample.cpp
+                 errorCount=$(grep error SCAReport.xml | wc -l)
+                 echo $errorCount
+                 if [ $errorCount -gt 3 ]
+			       then 
+			       echo "There is/are code review error[s]...Please look in the below xml for details -"
+			       more SCAReport.xml
+			       exit 1
+			     else
+			        echo "There is no code review error ... proceeding to next unit testing ..."
+			     fi 
+			     
+			  '''
+             }
+        }
+        
+        
+        stage('Unit Testing') {
+           steps {
+		      echo "unit testing using boost tool"
+              //generate a.out , execute a.out to perform actual unit test 
+              sh '''
+                 g++ unitTest.cpp -DBOOST_TEST_DYN_LINK -lboost_unit_test_framework
+                 ./a.out
+			  '''
+             }
+        }
+        
+	
+        stage('Complile') {
+           steps {
+		      echo "Compiling using g++ complier"
+              //generate cgi file from cpp to be deploy on apache
+              sh '''
+                 g++ cgisample.cpp -o deploy_cgi.cgi
+                 ls -ltr
+			  '''
+             }
+        }
+        
+        stage('Packaging Nexus') {
+           steps {
+		      echo "Compiling using g++ complier"
+              sh '''
+                 echo "upload deploy_cgi.cgi in nexus to deploy on apache"
+			  '''
+             }
+        }
+        
+        stage('Deploy') {
+           steps {
+		      echo "deploy cgi file on apache"
+              sh '''
+                 cp /var/lib/jenkins/workspace/DevOps_CPP/deploy_cgi.cgi /usr/lib/cgi-bin/
+			  '''
+             }
+        }
+       
+        
+    }
+    
+}
